@@ -275,7 +275,7 @@ const Dacky = () => {
               color: '#FFFBF4'
             }}>
               En DACKY, somos amantes de las mascotas como tú. 
-              Nuestro objetivo es brindar a los dueños de perros, 
+              Nuestro objetivo es brindar a los cuidadores de perros, 
               gatos y otras mascotas una solución integral para 
               proteger a sus compañeros peludos. Para nosotros, 
               lo importante es que sentir la tranquilidad de que tu 
@@ -416,7 +416,7 @@ const Dacky = () => {
           fontWeight: '300',
           color: '#FFFBF4'
         }}>
-          Victoria Vielma 2025 @ Copyrigth
+          Victoria Vielma 2025 © Copyrigth
         </p>
       </footer>
     </div>
