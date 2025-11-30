@@ -79,7 +79,7 @@ const Dacky = () => {
 
       {/* Hero Section */}
       <section style={{
-        minHeight: '90vh',
+        minHeight: '40vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -119,7 +119,7 @@ const Dacky = () => {
             fontWeight: '100',
             letterSpacing: '0.2em',
             marginBottom: '0rem',
-            fontFamily: "'Monserrat', sans-serif"
+            
           }}>
             DACKY
           </h1>
