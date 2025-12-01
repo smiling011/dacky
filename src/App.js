@@ -119,7 +119,6 @@ const Dacky = () => {
             fontWeight: '100',
             letterSpacing: '0.2em',
             marginBottom: '0rem',
-            
           }}>
             DACKY
           </h1>
@@ -191,7 +190,7 @@ const Dacky = () => {
         gap: '1rem',
         flexWrap: 'wrap'
       }}>
-        <a href={process.env.PUBLIC_URL + '/images/dacky-app.apk'} download style={{ textDecoration: 'none' }}>
+        <a href={process.env.PUBLIC_URL + '/file/app-release.apk'} download style={{ textDecoration: 'none' }}>
           <img 
             src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
             alt="Google Play"
@@ -385,7 +384,7 @@ const Dacky = () => {
           flexWrap: 'wrap',
           justifyContent: 'center'
         }}>
-          <a href={process.env.PUBLIC_URL + '/images/dacky-app.apk'} download style={{ textDecoration: 'none' }}>
+          <a href={process.env.PUBLIC_URL + '/file/app-release.apk'} download style={{ textDecoration: 'none' }}>
             <img 
               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
               alt="Google Play"
