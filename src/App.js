@@ -2,12 +2,34 @@ import React, { useState, useEffect } from 'react';
 
 const Dacky = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      setShowScrollTop(window.scrollY > 300);
+      
+      // Animación de scroll para elementos
+      const animateElements = document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-scale');
+      animateElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight * 0.85 && rect.bottom > 0;
+        
+        if (isVisible) {
+          el.classList.add('animate-visible');
+        } else {
+          el.classList.remove('animate-visible');
+        }
+      });
+    };
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div style={{ fontFamily: "'Montserrat', sans-serif", backgroundColor: '#11120D', color: '#FFFBF4' }}>
@@ -75,6 +97,129 @@ const Dacky = () => {
           transform: translateY(-10px) scale(1.02);
           box-shadow: 0 15px 35px rgba(255, 251, 244, 0.15);
         }
+
+        .scroll-top-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          width: 50px;
+          height: 50px;
+          background-color: #FFFBF4;
+          color: #11120D;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          transition: all 0.3s ease;
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        .scroll-top-btn.visible {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .scroll-top-btn:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 6px 16px rgba(255, 251, 244, 0.4);
+          background-color: #565449;
+          color: #FFFBF4;
+        }
+
+        /* Animaciones de scroll */
+        .scroll-animate {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate.animate-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .scroll-animate-left {
+          opacity: 0;
+          transform: translateX(-50px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate-left.animate-visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        .scroll-animate-right {
+          opacity: 0;
+          transform: translateX(50px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate-right.animate-visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        .scroll-animate-scale {
+          opacity: 0;
+          transform: scale(0.9);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate-scale.animate-visible {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        /* Responsive para imágenes */
+        @media (max-width: 768px) {
+          img[alt="Google Play"],
+          img[alt="App Store"] {
+            height: clamp(35px, 8vw, 50px) !important;
+          }
+          
+          .scroll-top-btn {
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+          }
+
+          img[alt="Dacky App"] {
+            width: 70% !important;
+            max-width: 350px !important;
+          }
+
+          section[style*="1.jpg"] {
+            background-size: cover !important;
+            background-position: center center !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          img[alt="Google Play"],
+          img[alt="App Store"] {
+            height: clamp(30px, 7vw, 40px) !important;
+          }
+
+          img[alt="Dacky App"] {
+            width: 85% !important;
+            max-width: 280px !important;
+          }
+
+          section[style*="1.jpg"] {
+            background-size: contain !important;
+            background-position: top center !important;
+            padding: 1rem !important;
+          }
+        }
       `}</style>
 
       {/* Hero Section */}
@@ -106,6 +251,7 @@ const Dacky = () => {
           <img 
             src={process.env.PUBLIC_URL + '/images/Minilogo dacky.png'} 
             alt="Dacky Logo"
+            className="scroll-animate-scale"
             style={{
               width: '200px',
               height: '200px',
@@ -114,7 +260,7 @@ const Dacky = () => {
             }}
           />
           
-          <h1 style={{
+          <h1 className="scroll-animate" style={{
             fontSize: 'clamp(1.5rem, 8vw, 6rem)',
             fontWeight: '100',
             letterSpacing: '0.2em',
@@ -136,7 +282,8 @@ const Dacky = () => {
   backgroundImage: `url(${process.env.PUBLIC_URL + '/images/1.jpg'})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat'
+  backgroundRepeat: 'no-repeat',
+  backgroundAttachment: 'scroll'
 }}>
   {/* Overlay para mejor legibilidad
   <div style={{
@@ -159,15 +306,16 @@ const Dacky = () => {
     position: 'relative',
     zIndex: 2
   }}>
-    <div className="slide-up" style={{ padding: '2rem' }}>
+    <div className="slide-up scroll-animate-left" style={{ padding: '2rem' }}>
       {/* Logo pequeño */}
       <img 
         src={process.env.PUBLIC_URL + '/images/Minilogo dacky.png'} 
         alt="Dacky"
+        className="scroll-animate-scale"
         style={{ width: '80px', marginBottom: '2rem' }}
       />
       
-      <h2 style={{
+      <h2 className="scroll-animate-left" style={{
         fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
         fontWeight: '100',
         marginBottom: '1.5rem',
@@ -176,7 +324,7 @@ const Dacky = () => {
         BIENVENIDO A DACKY
       </h2>
       
-      <p style={{
+      <p className="scroll-animate-left" style={{
         fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
         fontWeight: '600',
         marginBottom: '2rem',
@@ -185,7 +333,7 @@ const Dacky = () => {
         MANTÉN A TU MASCOTA SIEMPRE SEGURA
       </p>
       
-      <div style={{
+      <div className="scroll-animate" style={{
         display: 'flex',
         gap: '1rem',
         flexWrap: 'wrap'
@@ -234,7 +382,7 @@ const Dacky = () => {
           alignItems: 'center'
         }}>
           {/* Phone mockups */}
-          <div className="slide-up" style={{
+          <div className="slide-up scroll-animate-left" style={{
             display: 'flex',
             gap: '2rem',
             justifyContent: 'center',
@@ -244,10 +392,11 @@ const Dacky = () => {
               <img 
                 key={i}
                 src={process.env.PUBLIC_URL + `/images/App.png`}
-                
-                className="hover-lift"
+                alt="Dacky App"
+                className="hover-lift scroll-animate-scale"
                 style={{
-                  width: '600px',
+                  width: 'clamp(250px, 70%, 600px)',
+                  maxWidth: '600px',
                   height: 'auto',
                   borderRadius: '30px'
                 }}
@@ -255,8 +404,8 @@ const Dacky = () => {
             ))}
           </div>
 
-          <div className="slide-up" style={{ padding: '2rem' }}>
-            <h2 style={{
+          <div className="slide-up scroll-animate-right" style={{ padding: '2rem' }}>
+            <h2 className="scroll-animate-right" style={{
               fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               fontWeight: '100',
               marginBottom: '2rem',
@@ -266,7 +415,7 @@ const Dacky = () => {
               SOBRE NOSOTROS
             </h2>
             
-            <p style={{
+            <p className="scroll-animate-right" style={{
               fontSize: 'clamp(1rem, 2vw, 1.2rem)',
               lineHeight: '1.8',
               fontWeight: '300',
@@ -291,7 +440,7 @@ const Dacky = () => {
         backgroundColor: '#1a1b16'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <h2 className="slide-up" style={{
+          <h2 className="slide-up scroll-animate" style={{
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             fontWeight: '100',
             marginBottom: '4rem',
@@ -324,7 +473,7 @@ const Dacky = () => {
                 desc: 'Guarda y organiza toda la información esencial de tu mascota en un solo lugar.'
               }
             ].map((service, index) => (
-              <div key={index} className="service-card hover-lift" style={{
+              <div key={index} className="service-card hover-lift scroll-animate-scale" style={{
                 backgroundColor: '#FFFBF4',
                 color: '#11120D',
                 padding: '3rem 2rem',
@@ -368,7 +517,7 @@ const Dacky = () => {
         padding: '4rem 2rem',
         backgroundColor: '#11120D'
       }}>
-        <h2 className="slide-up" style={{
+        <h2 className="slide-up scroll-animate" style={{
           fontSize: 'clamp(2rem, 5vw, 3.5rem)',
           fontWeight: '100',
           marginBottom: '3rem',
@@ -378,7 +527,7 @@ const Dacky = () => {
           DESCARGA LA APP
         </h2>
 
-        <div style={{
+        <div className="scroll-animate-scale" style={{
           display: 'flex',
           gap: '2rem',
           flexWrap: 'wrap',
@@ -402,6 +551,14 @@ const Dacky = () => {
           </a>
         </div>
       </section>
+
+      <button 
+        className={`scroll-top-btn ${showScrollTop ? 'visible' : ''}`}
+        onClick={scrollToTop}
+        aria-label="Volver arriba"
+      >
+        ↑
+      </button>
 
       {/* Footer */}
       <footer style={{
